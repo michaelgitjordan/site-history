@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сравнение советских и западных ЭВМ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #ecf0f1;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #bdc3c7;
+        }
+        
+        .comparison-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #bdc3c7;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .timeline-controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .decade-btn {
+            padding: 12px 25px;
+            background: rgba(52, 152, 219, 0.2);
+            border: 2px solid #3498db;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .decade-btn:hover, .decade-btn.active {
+            background: #3498db;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .comparison-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .comparison-column {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(44, 62, 80, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .comparison-column:hover {
+            transform: translateY(-10px);
+        }
+        
+        .column-header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 3px solid;
+        }
+        
+        .soviet-header {
+            border-color: #e74c3c;
+        }
+        
+        .western-header {
+            border-color: #3498db;
+        }
+        
+        .column-title {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .column-subtitle {
+            font-size: 1.1rem;
+            color: #bdc3c7;
+        }
+        
+        .computer-card {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.3s ease;
+        }
+        
+        .computer-card:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .computer-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .computer-icon {
+            font-size: 2.5rem;
+            color: #3498db;
+        }
+        
+        .soviet .computer-icon {
+            color: #e74c3c;
+        }
+        
+        .computer-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .computer-year {
+            font-size: 1rem;
+            color: #bdc3c7;
+        }
+        
+        .computer-specs {
+            margin-left: 55px;
+        }
+        
+        .spec-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .spec-label {
+            width: 150px;
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .soviet .spec-label {
+            color: #e74c3c;
+        }
+        
+        .spec-value {
+            flex: 1;
+        }
+        
+        .progress-container {
+            margin-top: 5px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 5px;
+        }
+        
+        .soviet .progress-bar {
+            background: #e74c3c;
+        }
+        
+        .western .progress-bar {
+            background: #3498db;
+        }
+        
+        .comparison-chart {
+            width: 100%;
+            background: rgba(44, 62, 80, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .chart-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-container {
+            display: flex;
+            height: 300px;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 40px;
+            padding: 20px;
+        }
+        
+        .chart-bar {
+            width: 80px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .bar-value {
+            width: 100%;
+            border-radius: 5px 5px 0 0;
+            transition: height 1s ease;
+        }
+        
+        .soviet-bar {
+            background: linear-gradient(to top, #e74c3c, #c0392b);
+        }
+        
+        .western-bar {
+            background: linear-gradient(to top, #3498db, #2980b9);
+        }
+        
+        .bar-label {
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+            padding: 5px;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            width: 100%;
+        }
+        
+        .chart-title {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        .key-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .metric-card {
+            background: rgba(44, 62, 80, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .soviet-metric {
+            color: #e74c3c;
+        }
+        
+        .western-metric {
+            color: #3498db;
+        }
+        
+        .metric-label {
+            font-size: 1.1rem;
+            color: #bdc3c7;
+        }
+        
+        .conclusion {
+            background: rgba(44, 62, 80, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            border-left: 5px solid #f1c40f;
+        }
+        
+        .conclusion-title {
+            font-size: 1.8rem;
+            color: #f1c40f;
+            margin-bottom: 20px;
+        }
+        
+        .conclusion-text {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        
+        .highlight {
+            color: #f1c40f;
+            font-weight: bold;
+        }
+        
+        .scale-info {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            color: #bdc3c7;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-container {
+                flex-direction: column;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .chart-container {
+                gap: 20px;
+            }
+            
+            .chart-bar {
+                width: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-balance-scale"></i> Сравнение ЭВМ СССР и Запада</h1>
+            <p class="subtitle">Технологические достижения и различия в компьютерных технологиях 1950-1980-х годов</p>
+        </header>
+        
+        <section class="comparison-section">
+            <div class="section-header">
+                <h2 class="section-title">Эволюция вычислительной техники</h2>
+                <p class="section-subtitle">Сравнение характеристик советских и западных компьютеров по десятилетиям</p>
+            </div>
+            
+            <div class="timeline-controls">
+                <button class="decade-btn active" data-decade="1950">1950-е</button>
+                <button class="decade-btn" data-decade="1960">1960-е</button>
+                <button class="decade-btn" data-decade="1970">1970-е</button>
+                <button class="decade-btn" data-decade="1980">1980-е</button>
+            </div>
+            
+            <div class="comparison-container">
+                <!-- Советские ЭВМ -->
+                <div class="comparison-column soviet">
+                    <div class="column-header soviet-header">
+                        <h3 class="column-title"><i class="fas fa-hammer"></i> СССР</h3>
+                        <p class="column-subtitle">Разработки советских инженеров и ученых</p>
+                    </div>
+                    
+                    <div class="computer-card">
+                        <div class="computer-card-header">
+                            <div class="computer-icon"><i class="fas fa-computer"></i></div>
+                            <div>
+                                <div class="computer-name">МЭСМ</div>
+                                <div class="computer-year">1950</div>
+                            </div>
+                        </div>
+                        <div class="computer-specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Производительность</div>
+                                <div class="spec-value">50 оп/сек</div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 5%"></div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Память</div>
+                                <div class="spec-value">94 слова</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Технология</div>
+                                <div class="spec-value">6,000 электронных ламп</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Особенности</div>
+                                <div class="spec-value">Первая советская ЭВМ</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="computer-card">
+                        <div class="computer-card-header">
+                            <div class="computer-icon"><i class="fas fa-computer"></i></div>
+                            <div>
+                                <div class="computer-name">БЭСМ-6</div>
+                                <div class="computer-year">1968</div>
+                            </div>
+                        </div>
+                        <div class="computer-specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Производительность</div>
+                                <div class="spec-value">1 млн оп/сек</div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 45%"></div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Память</div>
+                                <div class="spec-value">192 КБ</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Технология</div>
+                                <div class="spec-value">Транзисторы</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Особенности</div>
+                                <div class="spec-value">Лучшая ЭВМ в Европе в 1968</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 1970-е: Эльбрус-1 -->
+                    <div class="computer-card">
+                        <div class="computer-card-header">
+                            <div class="computer-icon"><i class="fas fa-computer"></i></div>
+                            <div>
+                                <div class="computer-name">Эльбрус-1</div>
+                                <div class="computer-year">1973</div>
+                            </div>
+                        </div>
+                        <div class="computer-specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Производительность</div>
+                                <div class="spec-value">15 млн оп/сек</div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 65%"></div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Память</div>
+                                <div class="spec-value">64 МБ</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Технология</div>
+                                <div class="spec-value">Интегральные схемы</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Особенности</div>
+                                <div class="spec-value">Суперскалярная архитектура</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 1980-е: Электроника БК-0010 -->
+                    <div class="computer-card">
+                        <div class="computer-card-header">
+                            <div class="computer-icon"><i class="fas fa-computer"></i></div>
+                            <div>
+                                <div class="computer-name">Электроника БК-0010</div>
+                                <div class="computer-year">1984</div>
+                            </div>
+                        </div>
+                        <div class="computer-specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Производительность</div>
+                                <div class="spec-value">0.5 млн оп/сек</div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 15%"></div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Память</div>
+                                <div class="spec-value">32 КБ</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Технология</div>
+                                <div class="spec-value">КМОП-микросхемы</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Особенности</div>
+                                <div class="spec-value">Первый советский учебный компьютер</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Западные аналоги -->
+                <div class="comparison-column western">
+                    <div class="column-header western-header">
+                        <h3 class="column-title"><i class="fas fa-flag-usa"></i> США и Европа</h3>
+                        <p class="column-subtitle">Западные компьютерные технологии</p>
+                    </div>
+                    
+                    <div class="computer-card">
+                        <div class="computer-card-header">
+                            <div class="computer-icon"><i class="fas fa-computer"></i></div>
+                            <div>
+                                <div class="computer-name">UNIVAC I</div>
+                                <div class="computer-year">1951</div>
+                            </div>
+                        </div>
+                        <div class="computer-specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Производительность</div>
+                                <div class="spec-value">1,905 оп/сек</div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 15%"></div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Память</div>
+                                <div class="spec-value">1,000 слов</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Технология</div>
+                                <div class="spec-value">5,200 электронных ламп</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Особенности</div>
+                                <div class="spec-value">Первый коммерческий компьютер</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="computer-card">
+                        <div class="computer-card-header">
+                            <div class="computer-icon"><i class="fas fa-computer"></i></div>
+                            <div>
+                                <div class="computer-name">IBM System/360</div>
+                                <div class="computer-year">1964</div>
+                            </div>
+                        </div>
+                        <div class="computer-specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Производительность</div>
+                                <div class="spec-value">2.5 млн оп/сек</div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 60%"></div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Память</div>
+                                <div class="spec-value">8 МБ</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Технология</div>
+                                <div class="spec-value">Гибридные модули</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Особенности</div>
+                                <div class="spec-value">Семейство совместимых компьютеров</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 1970-е: Cray-1 -->
+                    <div class="computer-card">
+                        <div class="computer-card-header">
+                            <div class="computer-icon"><i class="fas fa-computer"></i></div>
+                            <div>
+                                <div class="computer-name">Cray-1</div>
+                                <div class="computer-year">1976</div>
+                            </div>
+                        </div>
+                        <div class="computer-specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Производительность</div>
+                                <div class="spec-value">160 млн оп/сек</div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 95%"></div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Память</div>
+                                <div class="spec-value">8 МБ</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Технология</div>
+                                <div class="spec-value">ЭСЛ-микросхемы</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Особенности</div>
+                                <div class="spec-value">Первый суперкомпьютер</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 1980-е: IBM PC -->
+                    <div class="computer-card">
+                        <div class="computer-card-header">
+                            <div class="computer-icon"><i class="fas fa-computer"></i></div>
+                            <div>
+                                <div class="computer-name">IBM PC</div>
+                                <div class="computer-year">1981</div>
+                            </div>
+                        </div>
+                        <div class="computer-specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Производительность</div>
+                                <div class="spec-value">4.77 млн оп/сек</div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 25%"></div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Память</div>
+                                <div class="spec-value">64 КБ (до 640 КБ)</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Технология</div>
+                                <div class="spec-value">Микропроцессор Intel 8088</div>
+                            </div>
+                            
+                            <div class="spec-item">
+                                <div class="spec-label">Особенности</div>
+                                <div class="spec-value">Стандарт персональных компьютеров</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comparison-chart">
+                <div class="chart-header">
+                    <h3>Сравнение производительности (операций в секунду)</h3>
+                    <p>Диаграмма показывает относительную производительность ЭВМ разных поколений</p>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-bar">
+                        <div class="bar-value soviet-bar" style="height: 50px;"></div>
+                        <div class="bar-label">МЭСМ (1950)</div>
+                        <div class="chart-title">50 оп/сек</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="bar-value western-bar" style="height: 150px;"></div>
+                        <div class="bar-label">UNIVAC I (1951)</div>
+                        <div class="chart-title">1,905 оп/сек</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="bar-value soviet-bar" style="height: 180px;"></div>
+                        <div class="bar-label">БЭСМ-6 (1968)</div>
+                        <div class="chart-title">1 млн оп/сек</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="bar-value western-bar" style="height: 250px;"></div>
+                        <div class="bar-label">IBM S/360 (1964)</div>
+                        <div class="chart-title">2.5 млн оп/сек</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="bar-value soviet-bar" style="height: 220px;"></div>
+                        <div class="bar-label">Эльбрус-1 (1973)</div>
+                        <div class="chart-title">15 млн оп/сек</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="bar-value western-bar" style="height: 280px;"></div>
+                        <div class="bar-label">Cray-1 (1976)</div>
+                        <div class="chart-title">160 млн оп/сек</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="bar-value soviet-bar" style="height: 80px;"></div>
+                        <div class="bar-label">БК-0010 (1984)</div>
+                        <div class="chart-title">0.5 млн оп/сек</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="bar-value western-bar" style="height: 120px;"></div>
+                        <div class="bar-label">IBM PC (1981)</div>
+                        <div class="chart-title">4.77 млн оп/сек</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="key-metrics">
+                <div class="metric-card">
+                    <div class="metric-value soviet-metric">1-2 года</div>
+                    <div class="metric-label">Отставание советских ЭВМ в 1950-х</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value soviet-metric">0 лет</div>
+                    <div class="metric-label">Отставание в 1960-х (БЭСМ-6)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value western-metric">5-7 лет</div>
+                    <div class="metric-label">Отставание в 1970-х годах</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value soviet-metric">80%</div>
+                    <div class="metric-label">Оригинальных разработок в советских ЭВМ</div>
+                </div>
+            </div>
+            
+            <div class="conclusion">
+                <h3 class="conclusion-title"><i class="fas fa-lightbulb"></i> Технологические выводы</h3>
+                <p class="conclusion-text">
+                    В 1950-х годах советские компьютеры <span class="highlight">отставали на 1-2 года</span> от западных аналогов, 
+                    но уже к середине 1960-х СССР создал ЭВМ мирового уровня. <span class="highlight">БЭСМ-6</span> (1968) 
+                    превосходила большинство современников и не уступала американским IBM System/360. 
+                    Однако в 1970-х началось нарастающее отставание из-за проблем в микроэлектронике. 
+                    Советские ЭВМ отличались <span class="highlight">оригинальными архитектурными решениями</span>, 
+                    но страдали от несовместимости между разными системами и сложностей с программным обеспечением.
+                </p>
+                <p class="conclusion-text">
+                    В 1980-х годах разрыв увеличился - западные персональные компьютеры стали массовым явлением, 
+                    в то время как в СССР лишь начиналось производство учебных машин типа <span class="highlight">БК-0010</span>. 
+                    Тем не менее, советские суперкомпьютеры <span class="highlight">Эльбрус</span> продолжали использовать 
+                    передовые архитектурные решения, опережавшие своё время.
+                </p>
+            </div>
+        </section>
+        
+        <footer>
+                <p>2025 Проект "История советских ЭВМ"</p>
+                <p>Институт компьютерных наук и технологий</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const decadeButtons = document.querySelectorAll('.decade-btn');
+            const computerCards = document.querySelectorAll('.computer-card');
+            const chartBars = document.querySelectorAll('.bar-value');
+            const chartTitles = document.querySelectorAll('.chart-title');
+            
+            // Обработчики для кнопок десятилетий
+            decadeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Убираем активный класс у всех кнопок
+                    decadeButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Добавляем активный класс текущей кнопке
+                    this.classList.add('active');
+                    
+                    // Получаем выбранное десятилетие
+                    const decade = this.dataset.decade;
+                    
+                    // Обновляем отображаемые компьютеры
+                    updateComputers(decade);
+                    
+                    // Обновляем диаграмму
+                    updateChart(decade);
+                });
+            });
+            
+            // Функция обновления отображаемых компьютеров
+            function updateComputers(decade) {
+                // Скрываем все карточки
+                computerCards.forEach(card => {
+                    card.style.display = 'none';
+                });
+                
+                // Показываем только соответствующие выбранному десятилетию
+                let cardsToShow = [];
+                
+                switch(decade) {
+                    case '1950':
+                        cardsToShow = ['МЭСМ', 'UNIVAC I'];
+                        break;
+                    case '1960':
+                        cardsToShow = ['БЭСМ-6', 'IBM System/360'];
+                        break;
+                    case '1970':
+                        cardsToShow = ['Эльбрус-1', 'Cray-1'];
+                        break;
+                    case '1980':
+                        cardsToShow = ['Электроника БК-0010', 'IBM PC'];
+                        break;
+                }
+                
+                computerCards.forEach(card => {
+                    const computerName = card.querySelector('.computer-name').textContent;
+                    if (cardsToShow.includes(computerName)) {
+                        card.style.display = 'block';
+                    }
+                });
+            }
+            
+            // Функция обновления диаграммы с адаптивным масштабированием
+            function updateChart(decade) {
+                const maxBarHeight = 250; // Максимальная высота столбца в пикселях
+                let values = [];
+                
+                switch(decade) {
+                    case '1950':
+                        values = [50, 1905, 0, 0, 0, 0, 0, 0]; 
+                        break;
+                    case '1960':
+                        values = [0, 0, 1000000, 2500000, 0, 0, 0, 0];
+                        break;
+                    case '1970':
+                        values = [0, 0, 0, 0, 15000000, 160000000, 0, 0];
+                        break;
+                    case '1980':
+                        values = [0, 0, 0, 0, 0, 0, 500000, 4770000];
+                        break;
+                }
+                
+                // Находим максимальное значение для масштабирования
+                const maxValue = Math.max(...values);
+                
+                // Обновляем высоту столбцов
+                chartBars.forEach((bar, index) => {
+                    if (values[index] > 0) {
+                        // Используем логарифмическую шкалу для больших значений
+                        const height = values[index] > 1000000 ? 
+                            Math.log(values[index]) / Math.log(maxValue) * maxBarHeight * 0.9 :
+                            (values[index] / maxValue) * maxBarHeight;
+                        
+                        bar.style.height = height + 'px';
+                        
+                        // Обновляем подписи
+                        if (values[index] >= 1000000) {
+                            chartTitles[index].textContent = (values[index]/1000000).toFixed(1) + ' млн оп/сек';
+                        } else if (values[index] >= 1000) {
+                            chartTitles[index].textContent = (values[index]/1000).toFixed(1) + ' тыс оп/сек';
+                        } else {
+                            chartTitles[index].textContent = values[index] + ' оп/сек';
+                        }
+                    } else {
+                        bar.style.height = '0';
+                        chartTitles[index].textContent = '—';
+                    }
+                });
+            }
+            
+            // Инициализация
+            updateComputers('1950');
+            updateChart('1950');
+        });
+    </script>
+</body>
+</html>
